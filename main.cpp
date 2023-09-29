@@ -12,10 +12,8 @@ int main() {
     file.open("ba2-dictionary-playable-anagram.txt");
     std::string word;
     Trie* trie = new Trie();
-    if (file.is_open()) {
-        while (file >> word) {
-            trie->add_word(word);
-        }
+    while (file >> word) {
+        trie->add_word(word);
     }
     file.close();
     std::cout << "Initialised trie." << std::endl;
@@ -23,21 +21,21 @@ int main() {
     std::string initial_rack = "ERSHDLATAFPEYFEO";
     // std::cout << "Enter rack: ";
     // std::cin >> initial_rack;
-    Rack* rack = new Rack(16);
+    Rack rack(16);
 
     for (char letter : initial_rack) {
-        rack->add_tile(Tile(letter));
+        rack.add_tile(std::move(Tile(letter)));
     }
 
     // print the current rack
     std::cout << "Current rack: ";
-    for (Tile tile : rack->get_tiles()) {
+    for (Tile tile : rack.get_tiles()) {
         std::cout << tile.letter << " ";
     }
     std::cout << std::endl;
     
     auto start = std::chrono::high_resolution_clock::now();
-    std::pair<Word, double> best_word = rack->best_word(*trie, 10, 100);
+    std::pair<Word, double> best_word = rack.best_word(*trie, 10, 100);
     auto end = std::chrono::high_resolution_clock::now();
     std::cout << "Best word: " << best_word.first.get_word_str() << std::endl;
     std::cout << "Best word score: " << best_word.first.word_dmg() << std::endl;

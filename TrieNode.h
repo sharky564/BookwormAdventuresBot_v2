@@ -1,19 +1,14 @@
 #ifndef TRIENODE_H
 #define TRIENODE_H
 
-#include <unordered_map>
-#include <vector>
+#include <cstdio>
+#include <cstring>
 
-class TrieNode {
-public:
-    std::unordered_map<char, TrieNode*> children;
+struct TrieNode {
+    TrieNode* children[26];
     bool word_finished;
     // std::vector<TrieNode*> children;
     TrieNode();
-    TrieNode(
-        std::unordered_map<char, TrieNode*> children, 
-        bool word_finished
-    );
 };
 
 #endif // TRIENODE_H

@@ -18,16 +18,22 @@
 //         TrieNode* root;
 // };
 
+const int MAXN = 1e6;
+#include <bitset>
+
 class Trie {
 private:
     int next = 1;
-    std::vector<std::vector<int>> x;
 public:
+    int x[MAXN][26];
+    std::bitset<MAXN> word_finished;
+
     Trie();
     void add_word(std::string&& word);
-    bool is_word(const std::string& word);
-    int get_root();
-    std::string to_string();
-}
+    bool is_word(const std::string& word) const;
+    // bool is_word_finished(int x) const;
+    constexpr int get_root() const;
+    std::string to_string() const;
+};
 
 #endif // TRIE_H

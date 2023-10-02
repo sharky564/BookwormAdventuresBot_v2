@@ -4,11 +4,16 @@
 #include <cstdio>
 #include <cstring>
 
+// struct TrieNode {
+//     TrieNode* children[26];
+//     bool word_finished;
+//     // std::vector<TrieNode*> children;
+//     TrieNode();
+// };
+
 struct TrieNode {
-    TrieNode* children[26];
+    int val;
     bool word_finished;
-    // std::vector<TrieNode*> children;
-    TrieNode();
 };
 
 #endif // TRIENODE_H

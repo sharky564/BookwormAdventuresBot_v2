@@ -18,6 +18,7 @@
 
 class Word {
     public:
+        Word();
         Word(const std::vector<Tile>& tiles); // Constructor
         int word_dmg() const; // Returns the damage of the word
         std::string get_word_str() const; // Returns the string of the word
@@ -31,7 +32,7 @@ class Word {
         double equivalent_letters;
 };
 
-template <> struct std::hash<Word> {
+template<> struct std::hash<Word> {
     inline size_t operator()(const Word &word) const noexcept {
         return std::hash<std::string>()(word.get_word_str());
     };

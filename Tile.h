@@ -16,9 +16,10 @@ struct Tile {
     bool operator==(const Tile &other) const;
 };
 
-template <> struct std::hash<Tile> {
+template<> struct std::hash<Tile> {
     inline size_t operator()(const Tile &tile) const noexcept {
-        return std::hash<char>()(tile.letter);
+        // return std::hash<char>()(tile.letter);
+        return tile.letter;
     };
 };
 

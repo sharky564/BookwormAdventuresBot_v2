@@ -10,7 +10,7 @@ class Trie {
     public:
         Trie();
         Trie(std::unordered_map<char, TrieNode*> children, bool word_finished);
-        void add_word(const std::string &word);
+        void add_word(std::string&& word);
         bool is_word(const std::string &word);
         TrieNode* get_root();
         std::string to_string();

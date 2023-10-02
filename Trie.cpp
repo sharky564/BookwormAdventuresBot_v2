@@ -15,26 +15,26 @@ TrieNode* Trie::get_root() {
     return this->root;
 }
 
-void Trie::add_word(const std::string &word) {
-    TrieNode* current_node = this->root;
-    for (char letter : word) {
-        if (current_node->children.find(letter) == current_node->children.end()) {
-            current_node->children[letter] = new TrieNode();
+void Trie::add_word(std::string&& word) {
+    TrieNode* curr = this->root;
+    for (char letter: word) {
+        if (curr->children.find(letter) == curr->children.end()) {
+            curr->children[letter] = new TrieNode();
         }
-        current_node = current_node->children[letter];
+        curr = curr->children[letter];
     }
-    current_node->word_finished = true;
+    curr->word_finished = true;
 }
 
 bool Trie::is_word(const std::string &word) {
-    TrieNode* current_node = this->root;
+    TrieNode* curr = this->root;
     for (char letter : word) {
-        if (current_node->children.find(letter) == current_node->children.end()) {
+        if (curr->children.find(letter) == curr->children.end()) {
             return false;
         }
-        current_node = current_node->children[letter];
+        curr = curr->children[letter];
     }
-    return current_node->word_finished;
+    return curr->word_finished;
 }
 
 std::string Trie::to_string() {

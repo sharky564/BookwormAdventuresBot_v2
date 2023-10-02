@@ -37,15 +37,12 @@ std::unordered_multiset<Tile> Rack::get_tiles() const {
     return this->tiles;
 }
 
-void Rack::add_tile(Tile tile) {
-    this->tiles.insert(tile);
+inline void Rack::add_tile(const Tile& tile) {
+    this->tiles.emplace(tile);
 }
 
-void Rack::remove_tile(Tile tile) {
-    std::unordered_multiset<Tile>::iterator it = this->tiles.find(tile);
-    if (it != this->tiles.end()) {
-        this->tiles.erase(it);
-    }
+inline void Rack::remove_tile(const Tile& tile) {
+    this->tiles.erase(tile);
 }
 
 void Rack::regenerate() {
@@ -69,11 +66,19 @@ void Rack::regenerate() {
 
 void Rack::find_words_in_trie(
     TrieNode *curr_node, 
+<<<<<<< Updated upstream
     std::vector<Tile> &curr_word, 
     Rack &curr_rack, 
     std::unordered_set<Word> &valid_words, 
     int num_top_words, 
     std::unordered_set<std::string> &cache
+=======
+    std::vector<Tile>& curr_word, 
+    Rack &curr_rack, 
+    std::set<Word>& valid_words, 
+    int num_top_words, 
+    std::unordered_set<std::string>& cache
+>>>>>>> Stashed changes
 ) {
     std::string cache_key = "";
     for (Tile tile : curr_word) {
@@ -93,16 +98,32 @@ void Rack::find_words_in_trie(
         if ((curr_node->children.find(tile.letter) != curr_node->children.end()) || (tile.letter == '?')) {
             Rack new_rack = curr_rack;
             new_rack.remove_tile(tile);
+            // curr_rack.remove_tile(tile);
             std::vector<Tile> new_word = curr_word;
             new_word.push_back(tile);
             if (tile.letter != '?') {
-                find_words_in_trie(curr_node->children[tile.letter], new_word, new_rack, valid_words, num_top_words, cache);
+                find_words_in_trie(
+                    curr_node->children[tile.letter], 
+                    new_word, 
+                    new_rack, 
+                    valid_words, 
+                    num_top_words, 
+                    cache
+                );
             }
             else {
                 for (auto child : curr_node->children) {
-                    find_words_in_trie(child.second, new_word, new_rack, valid_words, num_top_words, cache);
+                    find_words_in_trie(
+                        child.second, 
+                        new_word, 
+                        new_rack, 
+                        valid_words, 
+                        num_top_words, 
+                        cache
+                    );
                 }
             }
+            // curr_rack.add_tile(tile);
         }
     }
 }
@@ -127,30 +148,47 @@ void Rack::play(Word word, bool regen) {
 }
 
 double Rack::incomplete_rack_score(Trie &trie, int num_top_words, int num_simulations) {
-    std::vector<double> scores = std::vector<double>();
+    // std::vector<double> scores = std::vector<double>();
+    double sum = 0;
     for (int i = 0; i < num_simulations; i++) {
         Rack curr_rack = Rack(this->tiles, this->size);
         curr_rack.regenerate();
         std::unordered_set<Word> curr_wordlist = curr_rack.generate_wordlist(trie, num_top_words);
         double curr_score = 0;
         int count = 0;
+<<<<<<< Updated upstream
         std::unordered_set<Word>::iterator it = curr_wordlist.begin();
         for (int j = 0; j < num_top_words & it != curr_wordlist.end(); j++, it++) {
+=======
+        auto it = curr_wordlist.begin();
+        for (int j = 0; j < num_top_words && it != curr_wordlist.end(); j++, it++) {
+>>>>>>> Stashed changes
             curr_score += it->word_dmg();
             count++;
         }
-        scores.push_back(curr_score / count);
+        // scores.push_back(curr_score / count);
+        sum += curr_score / count;
     }
-    double sum = 0;
-    for (auto score : scores) {
-        sum += score;
-    }
+    // double sum = 0;
+    // for (auto score : scores) {
+    //     sum += score;
+    // }
     return sum / num_simulations;
 }
 
+<<<<<<< Updated upstream
 std::pair<Word, double> Rack::best_word(Trie &trie, int num_top_words, int num_simulations) {
     std::unordered_set<Word> wordlist = this->generate_wordlist(trie, num_top_words);
     Word best_word = Word(std::vector<Tile>());
+=======
+std::pair<Word, double> Rack::best_word(
+    Trie &trie, 
+    int num_top_words, 
+    int num_simulations
+) {
+    std::set<Word> wordlist = this->generate_wordlist(trie, num_top_words);
+    Word best_word = Word();
+>>>>>>> Stashed changes
     double best_score = 0;
     for (auto word : wordlist) {
         double curr_score = word.word_dmg();
@@ -160,7 +198,7 @@ std::pair<Word, double> Rack::best_word(Trie &trie, int num_top_words, int num_s
         curr_score += curr_rack.incomplete_rack_score(trie, num_top_words, num_simulations);
         if (curr_score > best_score) {
             best_score = curr_score;
-            best_word = word;
+            best_word = std::move(word);
         }
     }
     return std::make_pair(best_word, best_score);

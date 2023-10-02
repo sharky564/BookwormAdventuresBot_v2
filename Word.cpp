@@ -1,5 +1,8 @@
 #include "Word.h"
 
+Word::Word() {
+    tiles = std::vector<Tile>();
+}
 Word::Word(const std::vector<Tile>& tiles) : tiles(tiles) {
     for (auto tile : tiles) {
         this->word_str += tile.letter;

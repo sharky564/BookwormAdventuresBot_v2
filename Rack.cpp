@@ -83,17 +83,19 @@ void Rack::find_words_in_trie(TrieNode *curr_node, std::vector<Tile> &curr_word,
         }
     }
     for (auto tile : curr_rack.tiles) {
-        if ((curr_node->children.find(tile.letter) != curr_node->children.end()) || (tile.letter == '?')) {
+        if ((tile.letter == '?') || (curr_node->children[(int)(tile.letter - 'A')] != nullptr)) {
             Rack new_rack = curr_rack;
             new_rack.remove_tile(tile);
             std::vector<Tile> new_word = curr_word;
             new_word.push_back(tile);
             if (tile.letter != '?') {
-                find_words_in_trie(curr_node->children[tile.letter], new_word, new_rack, valid_words, num_top_words, cache);
+                find_words_in_trie(curr_node->children[(int)(tile.letter - 'A')], new_word, new_rack, valid_words, num_top_words, cache);
             }
             else {
                 for (auto child : curr_node->children) {
-                    find_words_in_trie(child.second, new_word, new_rack, valid_words, num_top_words, cache);
+                    if (child != nullptr) {
+                        find_words_in_trie(child, new_word, new_rack, valid_words, num_top_words, cache);
+                    }                    
                 }
             }
         }

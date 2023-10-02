@@ -1,13 +1,13 @@
 #ifndef TRIENODE_H
 #define TRIENODE_H
 
-#include <unordered_map>
+#include <cstdio>
+#include <cstring>
 
 struct TrieNode {
-    std::unordered_map<char, TrieNode*> children;
+    TrieNode* children[26];
     bool word_finished;
     TrieNode();
-    TrieNode(std::unordered_map<char, TrieNode*> children, bool word_finished);
 };
 
 #endif // TRIENODE_H

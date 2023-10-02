@@ -7,8 +7,8 @@ Trie::Trie() {
     this->root = new TrieNode();
 }
 
-Trie::Trie(std::unordered_map<char, TrieNode*> children, bool word_finished) {
-    this->root = new TrieNode(children, word_finished);
+Trie::Trie(TrieNode* root) {
+    this->root = root;
 }
 
 TrieNode* Trie::get_root() {
@@ -18,10 +18,12 @@ TrieNode* Trie::get_root() {
 void Trie::add_word(const std::string &word) {
     TrieNode* current_node = this->root;
     for (char letter : word) {
-        if (current_node->children.find(letter) == current_node->children.end()) {
-            current_node->children[letter] = new TrieNode();
+        int child_index = (int)(letter - 'A');
+        // check if the children vector at the child_index of the letter is empty
+        if (current_node->children[child_index] == nullptr) {
+            current_node->children[child_index] = new TrieNode();
         }
-        current_node = current_node->children[letter];
+        current_node = current_node->children[child_index];
     }
     current_node->word_finished = true;
 }
@@ -29,7 +31,8 @@ void Trie::add_word(const std::string &word) {
 bool Trie::is_word(const std::string &word) {
     TrieNode* current_node = this->root;
     for (char letter : word) {
-        if (current_node->children.find(letter) == current_node->children.end()) {
+        int child_index = (int)(letter - 'A');
+        if (current_node->children[child_index] == nullptr) {
             return false;
         }
         current_node = current_node->children[letter];
@@ -40,8 +43,11 @@ bool Trie::is_word(const std::string &word) {
 std::string Trie::to_string() {
     std::function<std::string(TrieNode*, std::string)> recur = [&](TrieNode* node, std::string indent) -> std::string { // recursive function to print the trie
         std::string result = "";
-        for (auto child : node->children) { // iterate through the children of the node
-            result += indent + child.first + (child.second->word_finished ? "$" : "") + "\n" + recur(child.second, indent + "  ");
+        for (int i = 0; i < 26; i++) {
+            if (node->children[i] != nullptr) {
+                result += indent + (char)('A' + i) + "\n";
+                result += recur(node->children[i], indent + "  ");
+            }
         }
         return result;
     };

@@ -1,7 +1,7 @@
 #ifndef TRIE_H
 #define TRIE_H
 
-#include <unordered_map>
+#include <vector>
 #include <string>
 
 #include "TrieNode.h"
@@ -9,7 +9,7 @@
 class Trie {
     public:
         Trie();
-        Trie(std::unordered_map<char, TrieNode*> children, bool word_finished);
+        Trie(TrieNode* root);
         void add_word(const std::string &word);
         bool is_word(const std::string &word);
         TrieNode* get_root();

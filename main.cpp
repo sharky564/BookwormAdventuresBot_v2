@@ -37,7 +37,7 @@ int main() {
     std::cout << std::endl;
     
     auto start = std::chrono::high_resolution_clock::now();
-    std::pair<Word, double> best_word = rack->best_word(*trie, 10, 100);
+    std::pair<Word, double> best_word = rack->best_word(*trie, 10, 1000);
     auto end = std::chrono::high_resolution_clock::now();
     std::cout << "Best word: " << best_word.first.get_word_str() << std::endl;
     std::cout << "Best word score: " << best_word.first.word_dmg() << std::endl;

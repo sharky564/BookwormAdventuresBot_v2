@@ -9,6 +9,7 @@
 #include <random>
 #include <tuple>
 #include <algorithm>
+#include <queue>
 
 
 Rack::Rack() {
@@ -81,41 +82,40 @@ void Rack::find_words_in_trie(
     }
     cache.insert(cache_key);
 
-    // if (trie.is_word_finished(curr_node)) {
     if(trie.word_finished[curr_node]) {
         valid_words.insert(Word(curr_word));
         if (valid_words.size() > num_top_words) {
             valid_words.erase(--valid_words.end());
         }
     }
+    
     for (auto tile : curr_rack.tiles) {
+        int idx = (int)(tile.letter - 'A');
         if (tile.letter == '?' 
-            || trie.x[curr_node][(int)(tile.letter - 'A')] != -1
+            || trie.x[curr_node][idx] != -1
         ) {
             Rack new_rack = curr_rack;
             new_rack.remove_tile(tile);
-            // curr_rack.remove_tile(tile);
-            std::vector<Tile> new_word = curr_word;
-            new_word.push_back(tile);
-            if (tile.letter != '?') {
+
+            curr_word.push_back(tile);
+            if (tile.letter != '?') [[likely]] {
                 find_words_in_trie(
                     trie,
-                    trie.x[curr_node][(int)(tile.letter - 'A')], 
-                    new_word, 
+                    trie.x[curr_node][idx], 
+                    curr_word, 
                     new_rack, 
                     valid_words, 
                     num_top_words, 
                     cache
                 );
             }
-            else {
-                // for (auto child : curr_node->children) {
+            else [[unlikely]] {
                 for(int i=0;i<26;i++) {
                     if (trie.x[curr_node][i] != -1) {
                         find_words_in_trie(
                             trie,
                             trie.x[curr_node][i], 
-                            new_word, 
+                            curr_word, 
                             new_rack, 
                             valid_words, 
                             num_top_words, 
@@ -125,6 +125,8 @@ void Rack::find_words_in_trie(
                 }
             }
             // curr_rack.add_tile(tile);
+            
+            curr_word.pop_back();
         }
     }
 }
@@ -134,7 +136,7 @@ std::set<Word> Rack::generate_wordlist(const Trie &trie, int num_top_words) {
     std::set<Word> valid_words;
     std::vector<Tile> curr_word = std::vector<Tile>();
     Rack curr_rack = Rack(this->tiles, this->size);
-    std::unordered_set<std::string> cache = std::unordered_set<std::string>();
+    std::unordered_set<std::string> cache;
     find_words_in_trie(
         trie,
         trie.get_root(), 
@@ -173,13 +175,8 @@ double Rack::incomplete_rack_score(
             curr_score += it->word_dmg();
             count++;
         }
-        // scores.push_back(curr_score / count);
         sum += curr_score / count;
     }
-    // double sum = 0;
-    // for (auto score : scores) {
-    //     sum += score;
-    // }
     return sum / num_simulations;
 }
 

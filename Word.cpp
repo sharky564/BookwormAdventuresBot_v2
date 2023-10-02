@@ -37,9 +37,8 @@ bool Word::operator<(const Word &other) const {
     if (this->word_dmg() == other.word_dmg()) {
         if (this->get_word_str().length() == other.get_word_str().length()) {
             return this->get_word_str() < other.get_word_str();
-        } else {
-            return this->get_word_str().length() > other.get_word_str().length();
         }
+        return this->get_word_str().length() > other.get_word_str().length();
         // return this->get_word_str().length() < other.get_word_str().length();
     }
     return this->word_dmg() > other.word_dmg();

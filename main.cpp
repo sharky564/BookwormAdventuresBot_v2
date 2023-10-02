@@ -1,3 +1,6 @@
+#pragma GCC optimize("Ofast,unroll-loops")
+#pragma GCC target("avx,avx2,sse,sse2")
+
 #include "Trie.h"
 #include "Rack.h"
 
@@ -35,21 +38,12 @@ int main() {
     }
     std::cout << std::endl;
 
-    // auto start = std::chrono::high_resolution_clock::now();
-    // clock_t tStart = clock();
-    // /* Do your stuff here */
-    // printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-    // return 0;
-
     clock_t t_start = clock();
-
     std::pair<Word, double> best_word = rack.best_word(*trie, 10, 100);
-
-    // auto end = std::chrono::high_resolution_clock::now();
     std::cout << "Time taken: " << 
-        // std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << 
         (double)(clock() - t_start) / CLOCKS_PER_SEC
     << "s" << std::endl;
+
     std::cout << "Best word: " << best_word.first.get_word_str() << std::endl;
     std::cout << "Best word score: " << best_word.first.word_dmg() << std::endl;
     

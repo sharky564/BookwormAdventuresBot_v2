@@ -18,7 +18,6 @@ struct Tile {
 
 template<> struct std::hash<Tile> {
     inline size_t operator()(const Tile &tile) const noexcept {
-        // return std::hash<char>()(tile.letter);
         return tile.letter;
     };
 };

@@ -22,6 +22,7 @@ class Word {
         Word(const std::vector<Tile>& tiles); // Constructor
         int word_dmg() const; // Returns the damage of the word
         std::string get_word_str() const; // Returns the string of the word
+        double get_equivalent_letters() const; // Returns the equivalent letters of the word
         std::vector<Tile> get_tiles() const; // Returns the tiles of the word
         bool operator==(const Word &other) const; // Overloads the == operator
         bool operator<(const Word &other) const; // Overloads the < operator

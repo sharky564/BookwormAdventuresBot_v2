@@ -1,5 +1,8 @@
 #include "constants.h"
 
+extern const int BA1_FLAG = 0;
+extern const int GEM_FLAG = 1;
+
 extern const std::unordered_map<char, int> max_letter_counts = {
     {'A', 4}, {'B', 3}, {'C', 3}, {'D', 4}, {'E', 4}, {'F', 3}, {'G', 4}, {'H', 3}, {'I', 4}, {'J', 2}, {'K', 2}, {'L', 4}, {'M', 3}, {'N', 4}, {'O', 3}, {'P', 4}, {'Q', 2}, {'R', 4}, {'S', 4}, {'T', 4}, {'U', 4}, {'V', 3}, {'W', 3}, {'X', 2}, {'Y', 3}, {'Z', 2}, {'?', 16}
 };
@@ -18,13 +21,22 @@ extern const std::unordered_map<char, double> letter_equivalent_letters = {
 extern const int quarter_hearts_table[15] = {1, 2, 3, 4, 6, 8, 11, 14, 18, 22, 27, 32, 38, 44, 52};
 
 
-// TO ADD: GEMS, IMPURE TILES, TREASURES
-// const std::map<std::string, double> gem_power = {
-//     {"Amethyst", 0.15}, {"Emerald", 0.2}, {"Sapphire", 0.25}, {"Garnet", 0.3}, {"Ruby", 0.35}, {"Crystal", 0.5}, {"Diamond", 1}
-// };
-// const std::map<std::string, std::tuple<double, double>> gem_equivalent_letters = {
-//     {"Amethyst", {5.25, 6}}, {"Emerald", {6.25, 7}}, {"Sapphire", {8.25, 9}}, {"Garnet", {7.25, 8}}, {"Ruby", {9.25, 10}}, {"Crystal", {10.25, 11}}, {"Diamond", {11.25, 12}}
-// };
-// const std::map<std::string, std::tuple<double, double>> gem_overkill_thresholds = {
-//     {"Amethyst", {2, 3}}, {"Emerald", {3.25, 5}}, {"Sapphire", {8.25, 11}}, {"Garnet", {5.25, 8}}, {"Ruby", {11.25, 14}}, {"Crystal", {14.25, 20}}, {"Diamond", {20.25, 30}}
+extern const std::unordered_map<char, int> gem_int_conversion = {
+    {'n', 0}, {'a', 1}, {'e', 2}, {'s', 3}, {'g', 4}, {'r', 5}, {'c', 6}, {'d', 7}
+};
+
+extern const std::unordered_map<int, char> int_gem_conversion = {
+    {0, 'n'}, {1, 'a'}, {2, 'e'}, {3, 's'}, {4, 'g'}, {5, 'r'}, {6, 'c'}, {7, 'd'}
+};
+
+extern const std::unordered_map<int, double> gem_power = {
+    {1, 0.15}, {2, 0.2}, {3, 0.25}, {4, 0.3}, {5, 0.35}, {6, 0.5}, {7, 1}
+};
+extern const std::map<int, std::tuple<double, double>> gem_equivalent_letters = {
+    {1, {5.25, 6}}, {2, {6.25, 7}}, {3, {8.25, 9}}, {4, {7.25, 8}}, {5, {9.25, 10}}, {6, {10.25, 11}}, {7, {11.25, 12}}
+};
+
+// TO ADD: OVERKILL, TREASURE
+// extern const std::map<char, std::tuple<double, double>> gem_overkill_thresholds = {
+//     {'a', {2, 3}}, {'e', {3.25, 5}}, {'s', {8.25, 11}}, {'g', {5.25, 8}}, {'r', {11.25, 14}}, {'c', {14.25, 20}}, {'d', {20.25, 30}}
 // };

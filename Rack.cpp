@@ -13,40 +13,30 @@
 
 
 Rack::Rack() {
-    this->tiles = std::unordered_multiset<Tile>({});
+    this->tiles = std::vector<Tile>(16);
     this->size = 16;
 }
 
 Rack::Rack(int size) {
-    this->tiles = std::unordered_multiset<Tile>({});
+    this->tiles = std::vector<Tile>(size);
     this->size = size;
 }
 
-Rack::Rack(const std::unordered_multiset<Tile>& tiles) {
-    this->tiles = tiles;
-    this->size = 16;
-    assert(tiles.size() <= 16);
-}
+Rack::Rack(std::vector<Tile>& tiles): tiles(tiles), size(tiles.size()) {}
 
-Rack::Rack(const std::unordered_multiset<Tile>& tiles, int size) {
+Rack::Rack(std::vector<Tile>&& tiles): tiles(tiles), size(tiles.size()) {}
+
+Rack::Rack(std::vector<Tile>& tiles, int size) {
     this->tiles = tiles;
     this->size = size;
     assert(tiles.size() <= size);
 }
 
-std::unordered_multiset<Tile> Rack::get_tiles() const {
+std::vector<Tile> Rack::get_tiles() const {
     return this->tiles;
 }
 
-inline void Rack::add_tile(const Tile& tile) {
-    this->tiles.emplace(tile);
-}
-
-inline void Rack::remove_tile(const Tile& tile) {
-    this->tiles.erase(tile);
-}
-
-void Rack::regenerate() {
+void Rack::regenerate(int gem) {
     int num_tiles_to_add = size - this->tiles.size();
     std::unordered_map<char, int> letter_freq;
     for (auto tile : this->tiles) {
@@ -56,7 +46,8 @@ void Rack::regenerate() {
         int letter_index_to_add = letter_distribution(generator);
         char letter_to_add = 'A' + letter_index_to_add;
         if (letter_freq[letter_to_add] < max_letter_counts.at(letter_to_add)) {
-            this->add_tile(Tile(letter_to_add));
+            this->add_tile(Tile(letter_to_add, gem));
+            gem = 0;
             letter_freq[letter_to_add]++;
         } else {
             i--;
@@ -67,15 +58,16 @@ void Rack::regenerate() {
 void Rack::find_words_in_trie(
     const Trie& trie,
     int curr_node, // TrieNode *curr_node, 
-    std::vector<Tile> &curr_word, 
-    Rack &curr_rack, 
+    std::vector<Tile> &curr_word,
+    Rack &curr_rack,
     std::set<Word> &valid_words, 
     int num_top_words, 
     std::unordered_set<std::string> &cache
 ) {
     std::string cache_key = "";
-    for (Tile tile : curr_word) {
+    for (auto tile : curr_word) {
         cache_key += tile.letter;
+        cache_key += tile.gem;
     }
     if (cache.find(cache_key) != cache.end()) {
         return;
@@ -87,23 +79,27 @@ void Rack::find_words_in_trie(
         if (valid_words.size() > num_top_words) {
             valid_words.erase(--valid_words.end());
         }
+        // Word word = Word(curr_word);
+        // std::cout << "Found word: " << word.get_word_str() << " " << word.word_dmg() << std::endl;
     }
-    
-    for (auto tile : curr_rack.tiles) {
-        int idx = (int)(tile.letter - 'A');
-        if (tile.letter == '?' 
-            || trie.x[curr_node][idx] != -1
-        ) {
-            Rack new_rack = curr_rack;
-            new_rack.remove_tile(tile);
 
+    for (auto& tile : curr_rack.tiles) {
+        if (tile.used_in_word) {
+            continue;
+        }
+        int idx = (int)(tile.letter - 'A');
+        if (
+            tile.letter == '?' 
+            || trie.nodes[curr_node][idx] != -1
+        ) {
+            tile.used_in_word = true;
             curr_word.push_back(tile);
             if (tile.letter != '?') [[likely]] {
                 find_words_in_trie(
                     trie,
-                    trie.x[curr_node][idx], 
+                    trie.nodes[curr_node][idx], 
                     curr_word, 
-                    new_rack, 
+                    curr_rack, 
                     valid_words, 
                     num_top_words, 
                     cache
@@ -111,12 +107,12 @@ void Rack::find_words_in_trie(
             }
             else [[unlikely]] {
                 for(int i=0;i<26;i++) {
-                    if (trie.x[curr_node][i] != -1) {
+                    if (trie.nodes[curr_node][i] != -1) {
                         find_words_in_trie(
                             trie,
-                            trie.x[curr_node][i], 
+                            trie.nodes[curr_node][i], 
                             curr_word, 
-                            new_rack, 
+                            curr_rack, 
                             valid_words, 
                             num_top_words, 
                             cache
@@ -124,8 +120,7 @@ void Rack::find_words_in_trie(
                     }                    
                 }
             }
-            // curr_rack.add_tile(tile);
-            
+            tile.used_in_word = false;
             curr_word.pop_back();
         }
     }
@@ -154,11 +149,28 @@ void Rack::play(Word word, bool regen) {
         this->remove_tile(tile);
     }
     if (regen) {
-        this->regenerate();
+        int gem;
+        double word_equivalent_letters = word.get_equivalent_letters();
+        if (word_equivalent_letters <= 5 || GEM_FLAG == 0) {
+            gem = 0;
+        }
+        else {
+            for (auto pos_gem: gem_equivalent_letters) {
+                if (word_equivalent_letters >= std::get<0>(pos_gem.second) && word_equivalent_letters <= std::get<1>(pos_gem.second)) {
+                    gem = pos_gem.first;
+                    break;
+                }
+            }
+        }
+        this->regenerate(gem);
     }
 }
 
 double Rack::incomplete_rack_score(
+<<<<<<< HEAD
+=======
+    int gem,
+>>>>>>> baa409e (Updated code with changes from james, as well as using a vector instead of unordered multiset for racks, adding a boolean flag rather than deleting tiles when searching for words, and incorporating gems into the calculations)
     const Trie &trie, 
     int num_top_words, 
     int num_simulations
@@ -166,7 +178,7 @@ double Rack::incomplete_rack_score(
     double sum = 0;
     for (int i = 0; i < num_simulations; i++) {
         Rack curr_rack = Rack(this->tiles, this->size);
-        curr_rack.regenerate();
+        curr_rack.regenerate(gem);
         std::set<Word> curr_wordlist = curr_rack.generate_wordlist(trie, num_top_words);
         double curr_score = 0;
         int count = 0;
@@ -191,9 +203,18 @@ std::pair<Word, double> Rack::best_word(
     for (auto word : wordlist) {
         double curr_score = word.word_dmg();
         Rack curr_rack = Rack(this->tiles, this->size);
-        curr_rack.regenerate();
         curr_rack.play(word, false);
-        curr_score += curr_rack.incomplete_rack_score(trie, num_top_words, num_simulations);
+        int gem = 0;
+        double word_equivalent_letters = word.get_equivalent_letters();
+        if (word_equivalent_letters > 5 && GEM_FLAG == 1) {
+            for (auto pos_gem: gem_equivalent_letters) {
+                if (word_equivalent_letters >= std::get<0>(pos_gem.second) && word_equivalent_letters <= std::get<1>(pos_gem.second)) {
+                    gem = pos_gem.first;
+                    break;
+                }
+            }
+        }
+        curr_score += curr_rack.incomplete_rack_score(gem, trie, num_top_words, num_simulations);
         if (curr_score > best_score) {
             best_score = curr_score;
             best_word = std::move(word);

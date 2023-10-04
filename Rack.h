@@ -13,8 +13,8 @@
 #include "Trie.h"
 #endif // TRIE_H
 
-#include <set>
 #include <unordered_set>
+#include <set>
 #include <vector>
 #include <string>
 #include <tuple>
@@ -24,19 +24,28 @@ class Rack {
 public:
     Rack();
     Rack(int size);
-    Rack(const std::unordered_multiset<Tile>& tiles);
-    Rack(const std::unordered_multiset<Tile>& tiles, int size);
+    Rack(std::vector<Tile>& tiles);
+    Rack(std::vector<Tile>&& tiles);
+    Rack(std::vector<Tile>& tiles, int size);
 
-    void add_tile(const Tile& tile);
-    void remove_tile(const Tile& tile);
-    void regenerate();
-    std::unordered_multiset<Tile> get_tiles() const;
+    inline void add_tile(const Tile& tile) {
+        this->tiles.push_back(tile);
+    };
+    inline void remove_tile(const Tile& tile) {
+        auto it = std::find(this->tiles.begin(), this->tiles.end(), tile);
+        if (it != this->tiles.end()) {
+            this->tiles.erase(it);
+        }
+    };
+    void regenerate(int gem);
+    std::vector<Tile> get_tiles() const;
     std::set<Word> generate_wordlist(
         const Trie &trie, 
         int num_top_words
     );
     void play(Word word, bool regen);
     double incomplete_rack_score(
+        int gem,
         const Trie &trie, 
         int num_top_words, 
         int num_simulations
@@ -49,13 +58,13 @@ public:
     
 private:
     int size;
-    std::unordered_multiset<Tile> tiles;
+    std::vector<Tile> tiles;
     void find_words_in_trie(
         const Trie& trie,
         int curr_node,
         // TrieNode *curr_node, 
-        std::vector<Tile> &curr_word, 
-        Rack &curr_rack, 
+        std::vector<Tile> &curr_word,
+        Rack &curr_rack,
         std::set<Word> &valid_words, 
         int num_top_words, 
         std::unordered_set<std::string> &cache

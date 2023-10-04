@@ -6,17 +6,6 @@
 
 #include "TrieNode.h"
 
-// class Trie {
-//     public:
-//         Trie();
-//         Trie(TrieNode* root);
-//         void add_word(std::string&& word);
-//         bool is_word(const std::string &word);
-//         TrieNode* get_root();
-//         std::string to_string();
-//     private:
-//         TrieNode* root;
-// };
 
 const int MAXN = 1e6;
 #include <bitset>
@@ -25,14 +14,15 @@ class Trie {
 private:
     int next = 1;
 public:
-    int x[MAXN][26];
+    int nodes[MAXN][26]; // nodes of the trie, stored as an adjacency list of sorts
     std::bitset<MAXN> word_finished;
 
     Trie();
     void add_word(std::string&& word);
     bool is_word(const std::string& word) const;
-    // bool is_word_finished(int x) const;
-    constexpr int get_root() const;
+    constexpr int get_root() const {
+        return 0;
+    };
     std::string to_string() const;
 };
 

@@ -1,5 +1,6 @@
 #include "Word.h"
 #include <iostream>
+#include "constants.h"
 
 Word::Word() {
     tiles = std::vector<Tile>();
@@ -31,6 +32,24 @@ int Word::quarter_hearts() const {
     int rounded_equivalent_letters = _round(this->equivalent_letters);
     return quarter_hearts_table[_max(2, _min(rounded_equivalent_letters, 16)) - 2];
 }
+
+int Word::expected_gem() const {
+    int gem = 0;
+    int word_equivalent_letters = _ceil(this->get_equivalent_letters());
+    if (GEM_FLAG == 1 && word_equivalent_letters > 5) {
+        for (auto pos_gem: gem_equivalent_letters) {
+            if (word_equivalent_letters == pos_gem.second) {
+                gem = pos_gem.first;
+                break;
+            }
+        }
+        if (gem == 0) {
+            gem = 7;
+        }
+    }
+    return gem;
+}
+    
 
 int Word::word_dmg() const {
     int quarterhearts = this->quarter_hearts();

@@ -24,6 +24,7 @@ class Word {
         std::string get_word_str() const; // Returns the string of the word
         double get_equivalent_letters() const; // Returns the equivalent letters of the word
         std::vector<Tile> get_tiles() const; // Returns the tiles of the word
+        int expected_gem() const;
         bool operator==(const Word &other) const; // Overloads the == operator
         bool operator<(const Word &other) const; // Overloads the < operator
     private:

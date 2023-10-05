@@ -37,7 +37,7 @@ public:
             this->tiles.erase(it);
         }
     };
-    void regenerate(int gem);
+    void regenerate(int gem, bool random);
     std::vector<Tile> get_tiles() const;
     std::set<Word> generate_wordlist(
         const Trie &trie, 
@@ -46,6 +46,7 @@ public:
     void play(Word word, bool regen);
     double incomplete_rack_score(
         int gem,
+        bool random,
         const Trie &trie, 
         int num_top_words, 
         int num_simulations

@@ -28,8 +28,15 @@ int main() {
         std::string gems;
         std::cout << "Enter rack: ";
         std::cin >> initial_rack;
-        std::cout << "Enter gems: ";
-        std::cin >> gems;
+        if (GEM_FLAG == 1) {
+            std::cout << "Enter gems: ";
+            std::cin >> gems;
+        }
+        else {
+            for (int i = 0; i < initial_rack.size(); i++) {
+                gems += "n";
+            }
+        }
 
         std::vector<Tile> tiles;
         for (int i = 0; i < initial_rack.size(); i++) {
@@ -57,6 +64,7 @@ int main() {
             std::cout << int_gem_conversion.at(tile.gem);
         }
         std::cout << std::endl;
+        std::cout << "Expected gem: " << gem_names[best_word.first.expected_gem()] << std::endl;
         std::cout << "Best word score: " << best_word.first.word_dmg() << std::endl;
     }
     

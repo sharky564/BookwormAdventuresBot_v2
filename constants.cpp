@@ -2,6 +2,7 @@
 
 extern const int BA1_FLAG = 0;
 extern const int GEM_FLAG = 1;
+extern const int RAINBOW_FLAG = 1;
 
 extern const std::unordered_map<char, int> max_letter_counts = {
     {'A', 4}, {'B', 3}, {'C', 3}, {'D', 4}, {'E', 4}, {'F', 3}, {'G', 4}, {'H', 3}, {'I', 4}, {'J', 2}, {'K', 2}, {'L', 4}, {'M', 3}, {'N', 4}, {'O', 3}, {'P', 4}, {'Q', 2}, {'R', 4}, {'S', 4}, {'T', 4}, {'U', 4}, {'V', 3}, {'W', 3}, {'X', 2}, {'Y', 3}, {'Z', 2}, {'?', 16}
@@ -29,11 +30,15 @@ extern const std::unordered_map<int, char> int_gem_conversion = {
     {0, 'n'}, {1, 'a'}, {2, 'e'}, {3, 's'}, {4, 'g'}, {5, 'r'}, {6, 'c'}, {7, 'd'}
 };
 
+extern const std::vector<std::string> gem_names = {
+    "None", "Amethyst", "Emerald", "Sapphire", "Garnet", "Ruby", "Crystal", "Diamond"
+};
+
 extern const std::unordered_map<int, double> gem_power = {
     {1, 0.15}, {2, 0.2}, {3, 0.25}, {4, 0.3}, {5, 0.35}, {6, 0.5}, {7, 1}
 };
-extern const std::map<int, std::tuple<double, double>> gem_equivalent_letters = {
-    {1, {5.25, 6}}, {2, {6.25, 7}}, {3, {8.25, 9}}, {4, {7.25, 8}}, {5, {9.25, 10}}, {6, {10.25, 11}}, {7, {11.25, 12}}
+extern const std::map<int, int> gem_equivalent_letters = {
+    {1, 6}, {2, 7}, {3, 9}, {4, 8}, {5, 10}, {6, 11}, {7, 16}
 };
 
 // TO ADD: OVERKILL, TREASURE

@@ -27,9 +27,8 @@ public:
     Rack(std::vector<Tile>& tiles);
     Rack(std::vector<Tile>&& tiles);
     Rack(std::vector<Tile>& tiles, int size);
-
     inline void add_tile(const Tile& tile) {
-        this->tiles.push_back(tile);
+        this->tiles.emplace_back(std::move(tile));
     };
     inline void remove_tile(const Tile& tile) {
         auto it = std::find(this->tiles.begin(), this->tiles.end(), tile);
@@ -56,6 +55,7 @@ public:
         int num_top_words, 
         int num_simulations
     );
+    std::string get_rack_str() const;
     
 private:
     int size;

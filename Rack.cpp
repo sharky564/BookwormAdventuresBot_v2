@@ -13,12 +13,14 @@
 
 
 Rack::Rack() {
-    this->tiles = std::vector<Tile>(16);
+    this->tiles = std::vector<Tile> ();
+    tiles.reserve(16);
     this->size = 16;
 }
 
 Rack::Rack(int size) {
-    this->tiles = std::vector<Tile>(size);
+    this->tiles = std::vector<Tile> ();
+    tiles.reserve(size);
     this->size = size;
 }
 
@@ -36,19 +38,32 @@ std::vector<Tile> Rack::get_tiles() const {
     return this->tiles;
 }
 
+std::string Rack::get_rack_str() const {
+    std::string rack_str = "";
+    for (auto tile : this->tiles) {
+        rack_str += tile.letter;
+    }
+    return rack_str;
+}
+
 void Rack::regenerate(int gem, bool random) {
     int num_tiles_to_add = size - this->tiles.size();
+    // std::cout << "Num tiles to add: " << num_tiles_to_add << std::endl;
     std::unordered_map<char, int> letter_freq;
     for (auto tile : this->tiles) {
         letter_freq[tile.letter]++;
     }
+    // std::cout << "Reached Step 1 of regen" << std::endl;
     for (int i = 0; i < num_tiles_to_add; i++) {
+        // std::cout << "Reached Step 2 of regen" << std::endl;
         if (i == 0 && random) {
             this->add_tile(Tile('?'));
             continue;
         }
         int letter_index_to_add = letter_distribution(generator);
+        // std::cout << "Letter index to add: " << letter_index_to_add << std::endl;
         char letter_to_add = 'A' + letter_index_to_add;
+        // std::cout << "Letter to add: " << letter_to_add << std::endl;
         if (letter_freq[letter_to_add] < max_letter_counts.at(letter_to_add)) {
             this->add_tile(Tile(letter_to_add, gem));
             gem = 0;
@@ -188,6 +203,9 @@ double Rack::incomplete_rack_score(
         for (int j = 0; j < num_top_words && it != curr_wordlist.end(); j++, it++) {
             curr_score += it->word_dmg();
             count++;
+        }
+        if (count == 0) {
+            continue;
         }
         sum += curr_score / count;
     }

@@ -22,8 +22,6 @@ Rack::Rack(int size) {
     this->size = size;
 }
 
-Rack::Rack(std::vector<Tile>& tiles): tiles(tiles), size(tiles.size()) {}
-
 Rack::Rack(std::vector<Tile>&& tiles): tiles(tiles), size(tiles.size()) {}
 
 Rack::Rack(std::vector<Tile>& tiles, int size) {
@@ -32,7 +30,7 @@ Rack::Rack(std::vector<Tile>& tiles, int size) {
     assert(tiles.size() <= size);
 }
 
-std::vector<Tile> Rack::get_tiles() const {
+const std::vector<Tile>& Rack::get_tiles() const {
     return this->tiles;
 }
 
@@ -167,10 +165,7 @@ void Rack::play(Word word, bool regen) {
 }
 
 double Rack::incomplete_rack_score(
-<<<<<<< HEAD
-=======
     int gem,
->>>>>>> baa409e (Updated code with changes from james, as well as using a vector instead of unordered multiset for racks, adding a boolean flag rather than deleting tiles when searching for words, and incorporating gems into the calculations)
     const Trie &trie, 
     int num_top_words, 
     int num_simulations
@@ -200,7 +195,7 @@ std::pair<Word, double> Rack::best_word(
     std::set<Word> wordlist = this->generate_wordlist(trie, num_top_words);
     Word best_word = Word();
     double best_score = 0;
-    for (auto word : wordlist) {
+    for (auto& word : wordlist) {
         double curr_score = word.word_dmg();
         Rack curr_rack = Rack(this->tiles, this->size);
         curr_rack.play(word, false);
@@ -208,7 +203,9 @@ std::pair<Word, double> Rack::best_word(
         double word_equivalent_letters = word.get_equivalent_letters();
         if (word_equivalent_letters > 5 && GEM_FLAG == 1) {
             for (auto pos_gem: gem_equivalent_letters) {
-                if (word_equivalent_letters >= std::get<0>(pos_gem.second) && word_equivalent_letters <= std::get<1>(pos_gem.second)) {
+                if (word_equivalent_letters >= std::get<0>(pos_gem.second) 
+                    && word_equivalent_letters <= std::get<1>(pos_gem.second)) 
+                {
                     gem = pos_gem.first;
                     break;
                 }

@@ -22,14 +22,14 @@
 
 class Rack {
 public:
-    Rack();
-    Rack(int size);
-    Rack(std::vector<Tile>& tiles);
-    Rack(std::vector<Tile>&& tiles);
-    Rack(std::vector<Tile>& tiles, int size);
+    explicit Rack();
+    explicit Rack(int size);
+    explicit Rack(std::vector<Tile>&& tiles);
+    explicit Rack(std::vector<Tile>& tiles, int size);
+    virtual ~Rack() = default;
 
-    inline void add_tile(const Tile& tile) {
-        this->tiles.push_back(tile);
+    inline void add_tile(Tile&& tile) {
+        this->tiles.emplace_back(std::move(tile));
     };
     inline void remove_tile(const Tile& tile) {
         auto it = std::find(this->tiles.begin(), this->tiles.end(), tile);
@@ -38,7 +38,7 @@ public:
         }
     };
     void regenerate(int gem);
-    std::vector<Tile> get_tiles() const;
+    const std::vector<Tile>& get_tiles() const;
     std::set<Word> generate_wordlist(
         const Trie &trie, 
         int num_top_words

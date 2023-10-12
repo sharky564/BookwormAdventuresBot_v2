@@ -22,7 +22,7 @@ int main() {
     file.close();
     std::cout << "Initialised trie." << std::endl;
     
-    while (true) {
+    // while (true) {
         std::string initial_rack;
         std::string gems;
         std::cout << "Enter rack: ";
@@ -57,7 +57,7 @@ int main() {
         }
         std::cout << std::endl;
         std::cout << "Best word score: " << best_word.first.word_dmg() << std::endl;
-    }
+    // }
     
     return 0;
 }

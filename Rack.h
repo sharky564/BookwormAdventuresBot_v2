@@ -24,8 +24,8 @@ class Rack {
 public:
     explicit Rack();
     explicit Rack(int size);
-    explicit Rack(std::vector<Tile>&& tiles);
-    explicit Rack(std::vector<Tile>& tiles, int size);
+    explicit Rack(std::vector<Tile>&& tiles); // move constructor
+    explicit Rack(std::vector<Tile>& tiles, int size); // copy constructor
     virtual ~Rack() = default;
 
     inline void add_tile(Tile&& tile) {
@@ -43,7 +43,7 @@ public:
         const Trie &trie, 
         int num_top_words
     );
-    void play(Word word, bool regen);
+    void play(const Word& word, bool regen);
     double incomplete_rack_score(
         int gem,
         const Trie &trie, 

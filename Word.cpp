@@ -35,13 +35,13 @@ int Word::quarter_hearts() const {
 int Word::word_dmg() const {
     int quarterhearts = this->quarter_hearts();
     double gem_power_buff = 0;
-    for (auto tile : this->tiles) {
+    for (auto& tile : this->tiles) {
         if (tile.is_gem()) {
-            gem_power_buff += gem_power.at(tile.gem);
+            gem_power_buff += /*static_cast<int>(tile.is_gem) **/ gem_power.at(tile.gem);
         }
     }
     double overall_dmg = quarterhearts + _ceil(gem_power_buff * quarterhearts);
-    return (int)overall_dmg;
+    return static_cast<int>(overall_dmg);
 }
 
 bool Word::operator==(const Word &other) const {

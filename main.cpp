@@ -45,7 +45,7 @@ int main() {
         std::cout << std::endl;
         
         clock_t t_start = clock();
-        std::pair<Word, double> best_word = rack.best_word(*trie, 10, 100);
+        std::pair<Word, double> best_word = rack.best_word(*trie, 10, 1000);
         std::cout << "Time taken: " << 
             (double)(clock() - t_start) / CLOCKS_PER_SEC
         << "s" << std::endl;

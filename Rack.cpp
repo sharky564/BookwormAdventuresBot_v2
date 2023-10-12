@@ -142,7 +142,7 @@ std::set<Word> Rack::generate_wordlist(const Trie &trie, int num_top_words) {
     return valid_words;
 }
 
-void Rack::play(Word word, bool regen) {
+void Rack::play(const Word& word, bool regen) {
     for (auto tile : word.get_tiles()) {
         this->remove_tile(tile);
     }
@@ -154,7 +154,9 @@ void Rack::play(Word word, bool regen) {
         }
         else {
             for (auto pos_gem: gem_equivalent_letters) {
-                if (word_equivalent_letters >= std::get<0>(pos_gem.second) && word_equivalent_letters <= std::get<1>(pos_gem.second)) {
+                if (word_equivalent_letters >= std::get<0>(pos_gem.second) 
+                    && word_equivalent_letters <= std::get<1>(pos_gem.second)) 
+                {
                     gem = pos_gem.first;
                     break;
                 }
@@ -202,7 +204,7 @@ std::pair<Word, double> Rack::best_word(
         int gem = 0;
         double word_equivalent_letters = word.get_equivalent_letters();
         if (word_equivalent_letters > 5 && GEM_FLAG == 1) {
-            for (auto pos_gem: gem_equivalent_letters) {
+            for (auto& pos_gem: gem_equivalent_letters) {
                 if (word_equivalent_letters >= std::get<0>(pos_gem.second) 
                     && word_equivalent_letters <= std::get<1>(pos_gem.second)) 
                 {

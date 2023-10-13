@@ -27,7 +27,7 @@ public:
     Rack(std::vector<Tile>& tiles);
     Rack(std::vector<Tile>&& tiles);
     Rack(std::vector<Tile>& tiles, int size);
-    inline void add_tile(const Tile& tile) {
+    inline void add_tile(Tile&& tile) {
         this->tiles.emplace_back(std::move(tile));
     };
     inline void remove_tile(const Tile& tile) {

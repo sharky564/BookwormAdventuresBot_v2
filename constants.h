@@ -5,13 +5,14 @@
 #include <vector>
 #include <unordered_map>
 #include <random>
+#include <chrono>
 
 extern const int BA1_FLAG;
 extern const int GEM_FLAG;
 extern const int RAINBOW_FLAG;
 
 extern const std::unordered_map<char, int> max_letter_counts;
-extern const std::vector<double> letter_freq;
+extern const std::vector<double> letter_cumulative_distribution;
 
 extern std::discrete_distribution<int> letter_distribution;
 extern std::mt19937 generator;

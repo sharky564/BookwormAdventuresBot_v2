@@ -8,12 +8,10 @@ Word::Word() {
 Word::Word(const std::vector<Tile>& tiles) : tiles(tiles) {
     this->word_str = "";
     this->equivalent_letters = 0;
-    // std::cout << "Before: " << this->word_str << " " << this->equivalent_letters << std::endl;
     for (auto tile : tiles) {
         this->word_str += tile.letter;
         this->equivalent_letters += tile.pointScore;
     }
-    // std::cout << "After: " << this->word_str << " " << this->equivalent_letters << std::endl;
 }
 
 std::vector<Tile> Word::get_tiles() const {

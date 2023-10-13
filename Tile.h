@@ -17,7 +17,7 @@ struct Tile {
     Tile(char letter);
     Tile(char letter, int gem);
 
-    bool operator==(const Tile &other) const;
+    bool operator==(const Tile &other) const noexcept;
     bool is_gem() const;
 };
 

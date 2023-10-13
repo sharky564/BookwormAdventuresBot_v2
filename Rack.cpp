@@ -48,28 +48,29 @@ std::string Rack::get_rack_str() const {
 
 void Rack::regenerate(int gem, bool random) {
     int num_tiles_to_add = size - this->tiles.size();
-    // std::cout << "Num tiles to add: " << num_tiles_to_add << std::endl;
     std::unordered_map<char, int> letter_freq;
     for (auto tile : this->tiles) {
         letter_freq[tile.letter]++;
     }
-    // std::cout << "Reached Step 1 of regen" << std::endl;
-    for (int i = 0; i < num_tiles_to_add; i++) {
-        // std::cout << "Reached Step 2 of regen" << std::endl;
+
+    int i = 0;
+    while(i < num_tiles_to_add) {
         if (i == 0 && random) {
             this->add_tile(Tile('?'));
+            i++;
             continue;
         }
-        int letter_index_to_add = letter_distribution(generator);
-        // std::cout << "Letter index to add: " << letter_index_to_add << std::endl;
+        double random_num = (double)generator() / generator.max();
+        int letter_index_to_add = 0;
+        while (letter_cumulative_distribution[letter_index_to_add] < random_num) {
+            letter_index_to_add++;
+        }
         char letter_to_add = 'A' + letter_index_to_add;
-        // std::cout << "Letter to add: " << letter_to_add << std::endl;
         if (letter_freq[letter_to_add] < max_letter_counts.at(letter_to_add)) {
             this->add_tile(Tile(letter_to_add, gem));
             gem = 0;
             letter_freq[letter_to_add]++;
-        } else {
-            i--;
+            i++;
         }
     }
 }
@@ -93,7 +94,7 @@ void Rack::find_words_in_trie(
     }
     cache.insert(cache_key);
 
-    if(trie.word_finished[curr_node]) {
+    if(trie.word_finished[curr_node]) [[unlikely]] {
         valid_words.insert(Word(curr_word));
         if (valid_words.size() > num_top_words) {
             valid_words.erase(--valid_words.end());
@@ -123,7 +124,7 @@ void Rack::find_words_in_trie(
                 );
             }
             else [[unlikely]] {
-                for(int i=0;i<26;i++) {
+                for(int i = 0; i < 26; i++) {
                     if (trie.nodes[curr_node][i] != -1) {
                         find_words_in_trie(
                             trie,

@@ -60,7 +60,7 @@ void play_game() {
         std::cout << std::endl;
         
         clock_t t_start = clock();
-        std::pair<Word, double> best_word = rack.best_word(*trie, 20, 500);
+        std::pair<Word, double> best_word = rack.best_word(*trie, 10, 100);
         std::cout << "Time taken: " << 
             (double)(clock() - t_start) / CLOCKS_PER_SEC
         << "s" << std::endl;
@@ -79,20 +79,23 @@ void play_game() {
 }
 
 
-void generate_data(int num_tiles, int num_simulations) {
+void generate_data(int num_simulations) {
     // function that will generate random incomplete rack scores and write them to a file
     // this will be used as training data
     Rack rack;
     std::ofstream file;
     file.open("generated_data_2.txt");
     std::unordered_set<std::string> seen_racks;
+    // generate num_tiles randomly from 2 to 15
     for (int i = 0; i < num_simulations; i++) {
-        // std::cout << "i = " << i << "\n";
+        int num_tiles = ((double)rand() / RAND_MAX) * 14 + 2;
+        std::cout << "i = " << i << ", num_tiles = " << num_tiles << std::endl;
         rack = Rack();
         std::unordered_map<char, int> letter_freq;
         for (int i = 0; i < num_tiles; i++) {
+            double random_num = (double)generator() / generator.max();
             int letter_index_to_add = 0;
-            while (letter_cumulative_distribution[letter_index_to_add] < (double)generator() / generator.max()) {
+            while (letter_cumulative_distribution[letter_index_to_add] < random_num) {
                 letter_index_to_add++;
             }
             char letter_to_add = 'A' + letter_index_to_add;
@@ -109,7 +112,7 @@ void generate_data(int num_tiles, int num_simulations) {
             continue;
         }
         seen_racks.insert(rack_str);
-        double score = rack.incomplete_rack_score(0, false, *trie, 10, 1000);
+        double score = rack.incomplete_rack_score(0, false, *trie, 50, 1000);
         std::cout << rack_str << " " << score << std::endl;
         file << rack_str << " " << score << std::endl;
     }
@@ -119,7 +122,7 @@ void generate_data(int num_tiles, int num_simulations) {
 
 int main() {
     load_words_to_trie();
-    play_game();
-    // generate_data(10, 100000);
+    // play_game();
+    generate_data(10000);
     return 0;
 }

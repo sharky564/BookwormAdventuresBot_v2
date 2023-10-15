@@ -60,6 +60,18 @@ void Rack::regenerate(int gem, bool random) {
             i++;
             continue;
         }
+        if ((PRE_SCRAMBLE_FLAG == 1) && (letter_freq['A'] == 0)) {
+            this->add_tile(Tile('A'));
+            letter_freq['A']++;
+            i++;
+            continue;
+        }
+        if ((PRE_SCRAMBLE_FLAG == 1) && (letter_freq['E'] == 0)) {
+            this->add_tile(Tile('E'));
+            letter_freq['E']++;
+            i++;
+            continue;
+        }
         double random_num = (double)generator() / generator.max();
         int letter_index_to_add = 0;
         while (letter_cumulative_distribution[letter_index_to_add] < random_num) {

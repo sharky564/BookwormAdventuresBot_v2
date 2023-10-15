@@ -71,7 +71,6 @@ bool Word::operator<(const Word &other) const {
             return this->get_word_str() < other.get_word_str();
         }
         return this->get_word_str().length() > other.get_word_str().length();
-        // return this->get_word_str().length() < other.get_word_str().length();
     }
     return this->word_dmg() > other.word_dmg();
 }

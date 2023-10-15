@@ -8,6 +8,7 @@
 #include <chrono>
 
 extern const int BA1_FLAG;
+extern const int PRE_SCRAMBLE_FLAG;
 extern const int GEM_FLAG;
 extern const int RAINBOW_FLAG;
 

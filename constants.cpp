@@ -1,7 +1,8 @@
 #include "constants.h"
 
 extern const int BA1_FLAG = 1;
-extern const int GEM_FLAG = 1;
+extern const int PRE_SCRAMBLE_FLAG = 0;
+extern const int GEM_FLAG = 0;
 extern const int RAINBOW_FLAG = 0;
 
 extern const std::unordered_map<char, int> max_letter_counts = {
@@ -22,12 +23,12 @@ std::mt19937 generator = std::mt19937(std::chrono::system_clock::now().time_sinc
 // extern const std::unordered_map<char, double> letter_equivalent_letters = {
 //     {'A', 1}, {'B', 1.25}, {'C', 1.25}, {'D', 1}, {'E', 1}, {'F', 1.25}, {'G', 1}, {'H', 1.25}, {'I', 1}, {'J', 1.75}, {'K', 1.75}, {'L', 1}, {'M', 1.25}, {'N', 1}, {'O', 1}, {'P', 1.25}, {'Q', 2.75}, {'R', 1}, {'S', 1}, {'T', 1}, {'U', 1}, {'V', 1.5}, {'W', 1.5}, {'X', 2.5}, {'Y', 2.5}, {'Z', 2.5}, {'?', 1}
 // };
-// extern const std::unordered_map<char, double> letter_equivalent_letters = {
-//     {'A', 1}, {'B', 1.25}, {'C', 1.25}, {'D', 1}, {'E', 1}, {'F', 1.25}, {'G', 1}, {'H', 1.25}, {'I', 1}, {'J', 1.75}, {'K', 1.75}, {'L', 1}, {'M', 1.25}, {'N', 1}, {'O', 1}, {'P', 1.25}, {'Q', 2.75}, {'R', 1}, {'S', 1}, {'T', 1}, {'U', 1}, {'V', 1.5}, {'W', 1.5}, {'X', 3}, {'Y', 3}, {'Z', 3}, {'?', 1}
-// };
 extern const std::unordered_map<char, double> letter_equivalent_letters = {
-    {'A', 1}, {'B', 1.25}, {'C', 1.25}, {'D', 1}, {'E', 1}, {'F', 1.25}, {'G', 1}, {'H', 1.25}, {'I', 1}, {'J', 1.75}, {'K', 1.75}, {'L', 1}, {'M', 1.25}, {'N', 1}, {'O', 1}, {'P', 1.25}, {'Q', 2.75}, {'R', 2}, {'S', 1}, {'T', 1}, {'U', 1}, {'V', 1.5}, {'W', 1.5}, {'X', 3}, {'Y', 3}, {'Z', 3}, {'?', 1}
+    {'A', 1}, {'B', 1.25}, {'C', 1.25}, {'D', 1}, {'E', 1}, {'F', 1.25}, {'G', 1}, {'H', 1.25}, {'I', 1}, {'J', 1.75}, {'K', 1.75}, {'L', 1}, {'M', 1.25}, {'N', 1}, {'O', 1}, {'P', 1.25}, {'Q', 2.75}, {'R', 1}, {'S', 1}, {'T', 1}, {'U', 1}, {'V', 1.5}, {'W', 1.5}, {'X', 3}, {'Y', 3}, {'Z', 3}, {'?', 1}
 };
+// extern const std::unordered_map<char, double> letter_equivalent_letters = {
+//     {'A', 1}, {'B', 1.25}, {'C', 1.25}, {'D', 1}, {'E', 1}, {'F', 1.25}, {'G', 1}, {'H', 1.25}, {'I', 1}, {'J', 1.75}, {'K', 1.75}, {'L', 1}, {'M', 1.25}, {'N', 1}, {'O', 1}, {'P', 1.25}, {'Q', 2.75}, {'R', 2}, {'S', 1}, {'T', 1}, {'U', 1}, {'V', 1.5}, {'W', 1.5}, {'X', 3}, {'Y', 3}, {'Z', 3}, {'?', 1}
+// };
 extern const int quarter_hearts_table[15] = {1, 2, 3, 4, 6, 8, 11, 14, 18, 22, 27, 32, 38, 44, 52};
 
 

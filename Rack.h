@@ -55,6 +55,14 @@ public:
         int num_top_words, 
         int num_simulations
     );
+    std::pair<Word, double> best_word_health(
+        const Trie &trie, 
+        int health, 
+        double power, 
+        int num_top_words, 
+        int num_simulations
+    );
+
     std::string get_rack_str() const;
     
 private:
@@ -63,7 +71,6 @@ private:
     void find_words_in_trie(
         const Trie& trie,
         int curr_node,
-        // TrieNode *curr_node, 
         std::vector<Tile> &curr_word,
         Rack &curr_rack,
         std::set<Word> &valid_words, 

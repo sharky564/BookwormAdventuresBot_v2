@@ -95,7 +95,7 @@ void Rack::find_words_in_trie(
     std::set<Word> &valid_words, 
     int num_top_words, 
     std::unordered_set<std::string> &cache
-) {
+) { // can optimise caching by noting gems are unordered and not dependent on the letter they're attached to
     std::string cache_key = "";
     for (auto tile : curr_word) {
         cache_key += tile.letter;
@@ -108,7 +108,7 @@ void Rack::find_words_in_trie(
 
     if(trie.word_finished[curr_node]) [[unlikely]] {
         valid_words.insert(Word(curr_word));
-        if (valid_words.size() > num_top_words) {
+        if ((num_top_words != 0) && (valid_words.size() > num_top_words)) {
             valid_words.erase(--valid_words.end());
         }
     }
@@ -250,9 +250,63 @@ std::pair<Word, double> Rack::best_word(
                 wildcard = true;
             }
         }
-        curr_score += curr_rack.incomplete_rack_score(gem, wildcard, trie, num_top_words, num_simulations);
+        double SCALE_FACTOR = 1.5;
+        curr_score += SCALE_FACTOR * curr_rack.incomplete_rack_score(gem, wildcard, trie, num_top_words, num_simulations);
         if (curr_score > best_score) {
             best_score = curr_score;
+            best_word = std::move(word);
+        }
+    }
+    return std::make_pair(best_word, best_score);
+}
+
+std::pair<Word, double> Rack::best_word_health(
+    const Trie &trie, 
+    int health, 
+    double power, 
+    int num_top_words, 
+    int num_simulations
+) {
+    std::set<Word> wordlist = this->generate_wordlist(trie, 0);
+    Word best_word = Word();
+    double best_score = 0;
+    // check if top word is enough to kill
+    auto it = wordlist.begin();
+    bool kill_flag = true;
+    if (it != wordlist.end()) {
+        if (it->word_dmg(power) < health) {
+            // restrict wordlist to the top num_top_words words by resizing
+            wordlist = std::set<Word>(wordlist.begin(), std::next(wordlist.begin(), num_top_words));
+            kill_flag = false;
+        }
+    }
+    for (auto word : wordlist) {
+        double curr_score = word.word_dmg(power);
+        if ((kill_flag) & (curr_score < health)) {
+            break;
+        }
+        Rack curr_rack = Rack(this->tiles, this->size);
+        curr_rack.play(word, false);
+        int gem = word.expected_gem();
+        bool wildcard = false;
+        if (RAINBOW_FLAG == 1) {
+            std::unordered_set<int> distinct_gems;
+            for (auto tile : word.get_tiles()) {
+                if (tile.is_gem()) {
+                    distinct_gems.insert(tile.gem);
+                }
+            }
+            if (distinct_gems.size() >= 3) {
+                wildcard = true;
+            }
+        }
+        double incomplete_score = curr_rack.incomplete_rack_score(gem, wildcard, trie, num_top_words, num_simulations);
+        std::cout << word.get_word_str() << " " << curr_score << " " << incomplete_score << std::endl;
+        if (!kill_flag) {
+            incomplete_score = curr_score + 1.5 * incomplete_score;
+        }
+        if (incomplete_score > best_score) {
+            best_score = incomplete_score;
             best_word = std::move(word);
         }
     }

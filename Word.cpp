@@ -48,9 +48,20 @@ int Word::expected_gem() const {
     return gem;
 }
     
-
 int Word::word_dmg() const {
-    int quarterhearts = this->quarter_hearts();
+    double quarterhearts = (double)(this->quarter_hearts());
+    double gem_power_buff = 0;
+    for (auto tile : this->tiles) {
+        if (tile.is_gem()) {
+            gem_power_buff += gem_power.at(tile.gem);
+        }
+    }
+    double overall_dmg = quarterhearts + _ceil(gem_power_buff * quarterhearts);
+    return (int)overall_dmg;
+}
+
+int Word::word_dmg(double power) const {
+    double quarterhearts = (double)(this->quarter_hearts()) * (1.0 + power);
     double gem_power_buff = 0;
     for (auto tile : this->tiles) {
         if (tile.is_gem()) {
